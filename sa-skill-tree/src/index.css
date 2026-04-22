@@ -49,6 +49,44 @@ h1, h2, h3, .cinzel { font-family: 'Cinzel', serif; }
   background: radial-gradient(circle at 50% 50%, #1a1d26 0%, #0d0f14 100%);
   border-right: 2px solid var(--border-color);
   overflow: hidden;
+  user-select: none;
+}
+
+/* Zoom Controls */
+.zoom-controls {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  display: flex;
+  gap: 8px;
+  z-index: 100;
+}
+
+.zoom-controls button {
+  width: 36px;
+  height: 36px;
+  border: 2px solid var(--gold-dim);
+  background: rgba(21, 24, 32, 0.9);
+  color: var(--gold);
+  font-size: 20px;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.zoom-controls button:hover {
+  background: var(--gold);
+  color: var(--bg-dark);
+  border-color: var(--gold);
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+}
+
+.zoom-controls button:active {
+  transform: scale(0.95);
 }
 
 .skill-tree-svg {
