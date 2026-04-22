@@ -100,108 +100,124 @@ const SkillTree: React.FC = () => {
 
   return (
     <div className="game-layout">
-      {/* ЛЕВАЯ ЧАСТЬ: ДРЕВО */}
-      <div 
-        ref={containerRef}
-        className="tree-container"
-        onWheel={handleWheel}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseLeave}
-        style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
-      >
-        {/* Zoom/Pan controls */}
-        <div className="zoom-controls">
-          <button onClick={() => setScale(s => Math.min(s + 0.2, 3))}>+</button>
-          <button onClick={() => setScale(s => Math.max(s - 0.2, 0.3))}>−</button>
-          <button onClick={handleResetView}>⟲</button>
+      {/* ЗАГОЛОВОК СВЕРХУ */}
+      <div className="tree-header">
+        <h1 className="tree-title">Древо Прокачки Аналитика</h1>
+      </div>
+
+      {/* ОСНОВНОЙ КОНТЕНТ */}
+      <div className="tree-content-wrapper">
+        {/* ЛЕВАЯ ЧАСТЬ: ДРЕВО */}
+        <div 
+          ref={containerRef}
+          className="tree-container"
+          onWheel={handleWheel}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseLeave}
+          style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
+        >
+          {/* Zoom/Pan controls */}
+          <div className="zoom-controls">
+            <button onClick={() => setScale(s => Math.min(s + 0.2, 3))}>+</button>
+            <button onClick={() => setScale(s => Math.max(s - 0.2, 0.3))}>−</button>
+            <button onClick={handleResetView}>⟲</button>
+          </div>
+
+          {/* Контейнер для трансформации узлов и линий вместе */}
+          <div 
+            className="skill-tree-content"
+            style={{
+              transform: `translate(${offset.x}px, ${offset.y}px) scale(${scale})`,
+              transformOrigin: 'center center',
+            }}
+          >
+            <svg className="skill-tree-svg" viewBox="0 0 800 700">
+              {skillNodes.map(node => {
+                if (!node.parentId) return null;
+                const active = isActiveEdge(node.parentId, node.id);
+                return (
+                  <line
+                    key={`${node.parentId}-${node.id}`}
+                    x1={nodesMap.get(node.parentId)!.x} 
+                    y1={nodesMap.get(node.parentId)!.y}
+                    x2={node.x} 
+                    y2={node.y}
+                    className={`skill-edge ${active ? 'active' : ''}`}
+                  />
+                );
+              })}
+            </svg>
+
+            <div className="skill-tree-nodes">
+              {skillNodes.map(node => {
+                const isSelected = selectedIds.has(node.id);
+                const available = isNodeAvailable(node);
+                const isRoot = node.parentId === null;
+
+                return (
+                  <div
+                    key={node.id}
+                    className={`skill-node ${isSelected ? 'selected' : ''} ${available ? 'available' : 'locked'} ${isRoot ? 'root' : ''}`}
+                    style={{ left: node.x, top: node.y }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleNodeClick(node.id);
+                    }}
+                  >
+                    <div className="node-inner">
+                      <span className="node-icon">{node.icon}</span>
+                      <span className="node-label">{node.label}</span>
+                    </div>
+                    {!available && !isSelected && <div className="lock-overlay">🔒</div>}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
 
-        <svg className="skill-tree-svg" viewBox="0 0 800 700">
-          {skillNodes.map(node => {
-            if (!node.parentId) return null;
-            const active = isActiveEdge(node.parentId, node.id);
-            return (
-              <line
-                key={`${node.parentId}-${node.id}`}
-                x1={nodesMap.get(node.parentId)!.x} 
-                y1={nodesMap.get(node.parentId)!.y}
-                x2={node.x} 
-                y2={node.y}
-                className={`skill-edge ${active ? 'active' : ''}`}
+        {/* ПРАВАЯ ЧАСТЬ: ПАНЕЛЬ СТАТИСТИКИ */}
+        <div className="stats-sidebar">
+          <div className="sidebar-header">
+            <h2>Character Stats</h2>
+            <div className="avatar-placeholder">🧙‍♂️</div>
+          </div>
+
+          <div className="stat-block">
+            <div className="stat-row">
+              <span>Level</span>
+              <span className="stat-value">{Math.floor(learnedSkills / 3) + 1}</span>
+            </div>
+            <div className="stat-row">
+              <span>Skills Learned</span>
+              <span className="stat-value">{learnedSkills} / {totalSkills}</span>
+            </div>
+          </div>
+
+          <div className="progress-section">
+            <div className="progress-label">
+              <span>Mastery Progress</span>
+              <span>{progressPercent}%</span>
+            </div>
+            <div className="progress-bar-bg">
+              <div 
+                className="progress-bar-fill" 
+                style={{ width: `${progressPercent}%` }}
               />
-            );
-          })}
-        </svg>
+            </div>
+          </div>
 
-        <div 
-          className="skill-tree-nodes"
-          style={{
-            transform: `translate(${offset.x}px, ${offset.y}px) scale(${scale})`,
-            transformOrigin: 'center center',
-          }}
-        >
-          {skillNodes.map(node => {
-            const isSelected = selectedIds.has(node.id);
-            const available = isNodeAvailable(node);
-            const isRoot = node.parentId === null;
-
-            return (
-              <div
-                key={node.id}
-                className={`skill-node ${isSelected ? 'selected' : ''} ${available ? 'available' : 'locked'} ${isRoot ? 'root' : ''}`}
-                style={{ left: node.x, top: node.y }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleNodeClick(node.id);
-                }}
-              >
-                <div className="node-inner">
-                  <span className="node-icon">{node.icon}</span>
-                  <span className="node-label">{node.label}</span>
-                </div>
-                {!available && !isSelected && <div className="lock-overlay">🔒</div>}
-              </div>
-            );
-          })}
+          <div className="lore-text">
+            <p>"Путь аналитика долог и тернист. Изучи все ветви знаний, чтобы стать Архитектором Систем."</p>
+          </div>
         </div>
       </div>
 
-      {/* ПРАВАЯ ЧАСТЬ: ПАНЕЛЬ СТАТИСТИКИ */}
-      <div className="stats-sidebar">
-        <div className="sidebar-header">
-          <h2>Character Stats</h2>
-          <div className="avatar-placeholder">🧙‍♂️</div>
-        </div>
-
-        <div className="stat-block">
-          <div className="stat-row">
-            <span>Level</span>
-            <span className="stat-value">{Math.floor(learnedSkills / 3) + 1}</span>
-          </div>
-          <div className="stat-row">
-            <span>Skills Learned</span>
-            <span className="stat-value">{learnedSkills} / {totalSkills}</span>
-          </div>
-        </div>
-
-        <div className="progress-section">
-          <div className="progress-label">
-            <span>Mastery Progress</span>
-            <span>{progressPercent}%</span>
-          </div>
-          <div className="progress-bar-bg">
-            <div 
-              className="progress-bar-fill" 
-              style={{ width: `${progressPercent}%` }}
-            />
-          </div>
-        </div>
-
-        <div className="lore-text">
-          <p>"Путь аналитика долог и тернист. Изучи все ветви знаний, чтобы стать Архитектором Систем."</p>
-        </div>
+      {/* ПОДСКАЗКА ВНИЗУ */}
+      <div className="tree-footer">
+        <p className="hint-text">🖱 Кликните по узлу, чтобы активировать путь</p>
       </div>
     </div>
   );
