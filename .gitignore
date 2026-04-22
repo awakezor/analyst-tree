@@ -3,15 +3,15 @@
 node_modules/
 
 # Build outputs
-dist/
 build/
+dist/
 *.js.map
 *.css.map
 
 # Environment variables
 .env
 .env.local
-.env.*
+*.env.*
 
 # IDE files
 .vscode/
@@ -19,25 +19,48 @@ build/
 *.swp
 *.swo
 
-# Python artifacts (if any Python files exist in the project)
+# Logs
+*.log
+
+# Coverage
+coverage/
+htmlcov/
+*.coverage
+
+# Python
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.coverage
+.nox/
+.pytest_cache/
+.mypy_cache/
 
-# Logs
-*.log
+# Node.js
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+node_modules/
+dist/
+build/
+coverage/
+*.min.js
+*.min.css
 
 # OS generated files
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
-
-# Coverage reports
-coverage/
-htmlcov/
-.coverage
-
-# Temporary files
-*.tmp
-*.temp
 ```

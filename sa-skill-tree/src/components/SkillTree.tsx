@@ -170,9 +170,11 @@ const SkillTree: React.FC = () => {
             style={{
               transform: `translate(${offset.x}px, ${offset.y}px) scale(${scale})`,
               transformOrigin: 'center center',
+              width: '800px',
+              height: '700px',
             }}
           >
-            <svg className="skill-tree-svg" viewBox="0 0 800 700">
+            <svg className="skill-tree-svg" width="800" height="700">
               {skillNodes.map(node => {
                 if (!node.parentId) return null;
                 const active = isActiveEdge(node.parentId, node.id);
