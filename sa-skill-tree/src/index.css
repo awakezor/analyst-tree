@@ -45,7 +45,7 @@ h1, h2, h3, .cinzel { font-family: 'Cinzel', serif; }
 
 /* ЗАГОЛОВОК СВЕРХУ */
 .tree-header {
-  padding: 16px 24px;
+  padding: 20px 24px;
   background: linear-gradient(90deg, rgba(21, 24, 32, 0.9) 0%, rgba(26, 29, 38, 0.9) 50%, rgba(21, 24, 32, 0.9) 100%);
   border-bottom: 2px solid var(--border-color);
   text-align: center;
@@ -53,10 +53,68 @@ h1, h2, h3, .cinzel { font-family: 'Cinzel', serif; }
 
 .tree-title {
   margin: 0;
-  color: var(--gold);
+  font-size: 2.5rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  background: linear-gradient(
+    180deg,
+    #ffd700 0%,
+    #ffec8b 25%,
+    #daa520 50%,
+    #b8860b 75%,
+    #ffd700 100%
+  );
+  background-size: 100% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 3s ease-in-out infinite;
+  filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5))
+          drop-shadow(0 0 20px rgba(255, 215, 0, 0.3))
+          drop-shadow(0 0 30px rgba(255, 215, 0, 0.2));
+  position: relative;
+  display: inline-block;
+  font-family: 'Cinzel', serif;
+}
+
+.tree-title::before,
+.tree-title::after {
+  content: '⚔️';
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
   font-size: 1.8rem;
-  letter-spacing: 2px;
-  text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+  filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.6));
+  animation: float 2s ease-in-out infinite;
+}
+
+.tree-title::before {
+  left: -60px;
+  transform: translateY(-50%) rotate(-20deg);
+}
+
+.tree-title::after {
+  right: -60px;
+  transform: translateY(-50%) rotate(20deg);
+}
+
+@keyframes shimmer {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 0% 150%;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(-50%) rotate(-20deg);
+  }
+  50% {
+    transform: translateY(-60%) rotate(-20deg);
+  }
 }
 
 /* ОСНОВНОЙ КОНТЕНТ (дерево + сайдбар) */
@@ -95,8 +153,18 @@ h1, h2, h3, .cinzel { font-family: 'Cinzel', serif; }
 .skill-tree-content {
   position: absolute;
   top: 0; left: 0;
-  width: 100%; height: 100%;
+  width: 800px;
+  height: 700px;
   z-index: 2;
+}
+
+.skill-tree-svg {
+  position: absolute;
+  top: 0; left: 0;
+  width: 800px;
+  height: 700px;
+  pointer-events: none;
+  z-index: 1;
 }
 
 /* Zoom Controls */
@@ -327,13 +395,16 @@ h1, h2, h3, .cinzel { font-family: 'Cinzel', serif; }
   50% { transform: scale(1.1); }
 }
 
-/* --- БЛОК ДОСТИЖЕНИЙ --- */
+/* --- БЛОК ДОСТИЖЕНИЙ (КВЕСТЫ) --- */
 .achievements-section {
   background: rgba(212, 175, 55, 0.05);
   border: 1px solid var(--gold-dim);
   border-radius: 8px;
   padding: 16px;
   margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  max-height: 300px;
 }
 
 .achievements-title {
@@ -343,6 +414,7 @@ h1, h2, h3, .cinzel { font-family: 'Cinzel', serif; }
   margin: 0 0 4px 0;
   text-align: center;
   letter-spacing: 1px;
+  flex-shrink: 0;
 }
 
 .quests-hint {
@@ -351,12 +423,34 @@ h1, h2, h3, .cinzel { font-family: 'Cinzel', serif; }
   text-align: center;
   margin: 0 0 12px 0;
   font-style: italic;
+  flex-shrink: 0;
 }
 
 .achievements-grid {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+/* Скроллбар для квестов */
+.achievements-grid::-webkit-scrollbar {
+  width: 6px;
+}
+
+.achievements-grid::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 3px;
+}
+
+.achievements-grid::-webkit-scrollbar-thumb {
+  background: var(--gold-dim);
+  border-radius: 3px;
+}
+
+.achievements-grid::-webkit-scrollbar-thumb:hover {
+  background: var(--gold);
 }
 
 .achievement-item {
