@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&display=swap');
 
 :root {
   --bg-dark: #0a0c10;
@@ -28,6 +29,133 @@ h1, h2, h3, .cinzel { font-family: 'Cinzel', serif; }
   align-items: center;
   height: 100vh;
   padding: 20px;
+}
+
+/* --- ЭКРАН ВЫБОРА КЛАССА --- */
+.class-selection-screen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: radial-gradient(ellipse at center, #1a1d26 0%, #0a0c10 100%);
+  padding: 40px;
+}
+
+.class-selection-content {
+  text-align: center;
+  max-width: 1200px;
+}
+
+.class-selection-title {
+  font-family: 'Cinzel Decorative', cursive;
+  font-size: 3.5rem;
+  font-weight: 900;
+  background: linear-gradient(180deg, #ffd700 0%, #d4af37 50%, #b8860b 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 0 40px rgba(212, 175, 55, 0.5);
+  margin-bottom: 10px;
+  letter-spacing: 3px;
+  animation: titleGlow 3s ease-in-out infinite alternate;
+}
+
+.class-selection-subtitle {
+  font-size: 1.2rem;
+  color: var(--text-dim);
+  margin-bottom: 60px;
+  font-style: italic;
+}
+
+.classes-grid {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.class-card {
+  background: linear-gradient(145deg, rgba(21, 24, 32, 0.9), rgba(26, 29, 38, 0.9));
+  border: 2px solid var(--border-color);
+  border-radius: 16px;
+  padding: 40px 30px;
+  width: 320px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.class-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 16px;
+  padding: 2px;
+  background: linear-gradient(45deg, transparent, var(--class-color), transparent);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
+}
+
+.class-card:hover {
+  transform: translateY(-10px);
+  border-color: var(--class-color);
+  box-shadow: 0 20px 40px rgba(212, 175, 55, 0.3);
+}
+
+.class-card:hover::before {
+  opacity: 1;
+}
+
+.class-card-icon {
+  font-size: 5rem;
+  margin-bottom: 20px;
+  filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.5));
+}
+
+.class-card-name {
+  font-family: 'Cinzel', serif;
+  font-size: 1.5rem;
+  color: var(--gold);
+  margin-bottom: 15px;
+}
+
+.class-card-description {
+  color: var(--text-dim);
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+
+.class-card-button {
+  background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+  color: var(--bg-dark);
+  padding: 12px 30px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-family: 'Cinzel', serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+}
+
+.class-card:hover .class-card-button {
+  background: linear-gradient(135deg, #ffeaa7, var(--gold));
+  transform: scale(1.05);
+}
+
+@keyframes titleGlow {
+  from {
+    text-shadow: 0 0 30px rgba(212, 175, 55, 0.5), 0 0 60px rgba(212, 175, 55, 0.3);
+  }
+  to {
+    text-shadow: 0 0 50px rgba(212, 175, 55, 0.8), 0 0 100px rgba(212, 175, 55, 0.5);
+  }
 }
 
 /* --- ГЛАВНЫЙ ЛЕЙАУТ --- */
@@ -290,6 +418,27 @@ h1, h2, h3, .cinzel { font-family: 'Cinzel', serif; }
   display: flex;
   flex-direction: column;
   gap: 24px;
+  height: calc(100vh - 140px); /* Фиксированная высота с учетом header/footer */
+  overflow-y: auto; /* Скролл внутри колонки */
+}
+
+/* Стилизация скроллбара для колонки статистики */
+.stats-sidebar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.stats-sidebar::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+}
+
+.stats-sidebar::-webkit-scrollbar-thumb {
+  background: var(--gold-dim);
+  border-radius: 4px;
+}
+
+.stats-sidebar::-webkit-scrollbar-thumb:hover {
+  background: var(--gold);
 }
 
 .sidebar-header {
@@ -516,4 +665,34 @@ h1, h2, h3, .cinzel { font-family: 'Cinzel', serif; }
   color: var(--gold);
   margin-top: 2px;
   font-weight: bold;
+}
+
+/* Кнопка сброса прогресса */
+.reset-button {
+  background: rgba(139, 0, 0, 0.2);
+  border: 2px solid #8b0000;
+  color: #ff4444;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-family: 'Cinzel', serif;
+  font-size: 0.95rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.reset-button:hover {
+  background: rgba(139, 0, 0, 0.4);
+  border-color: #ff0000;
+  color: #ff6666;
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
+}
+
+.reset-button:active {
+  transform: scale(0.98);
 }

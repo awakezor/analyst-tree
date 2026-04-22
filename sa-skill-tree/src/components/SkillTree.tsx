@@ -1,7 +1,11 @@
 import React, { useState, useMemo, useRef, useCallback } from 'react';
 import { skillNodes, achievements, type SkillNode, type Achievement } from '../data/skillTree';
 
-const SkillTree: React.FC = () => {
+interface MainGameProps {
+  onExit?: () => void;
+}
+
+const MainGame: React.FC<MainGameProps> = ({ onExit }) => {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set(['root']));
   // Состояние для дополнительных квестов (достижений)
   const [completedQuests, setCompletedQuests] = useState<Set<string>>(new Set());
@@ -13,6 +17,13 @@ const SkillTree: React.FC = () => {
   const dragStart = useRef({ x: 0, y: 0 });
   const offsetStart = useRef({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
+  
+  // Используем onExit если нужно
+  React.useEffect(() => {
+    if (onExit) {
+      // Можно добавить логику при необходимости
+    }
+  }, [onExit]);
   
   const nodesMap = useMemo(() => {
     const map = new Map<string, SkillNode>();
@@ -135,6 +146,14 @@ const SkillTree: React.FC = () => {
       newCompleted.add(questId);
     }
     setCompletedQuests(newCompleted);
+  };
+
+  // Обработчик сброса прогресса
+  const handleResetProgress = () => {
+    setSelectedIds(new Set(['root']));
+    setCompletedQuests(new Set());
+    setScale(1);
+    setOffset({ x: 0, y: 0 });
   };
 
   return (
@@ -262,6 +281,16 @@ const SkillTree: React.FC = () => {
             </div>
           </div>
 
+          {/* Кнопка сброса прогресса */}
+          <button 
+            className="reset-button"
+            onClick={handleResetProgress}
+            type="button"
+            title="Сбросить весь прогресс"
+          >
+            🗑️ Сброс
+          </button>
+
           {/* Блок дополнительных квестов */}
           <div className="achievements-section">
             <h3 className="achievements-title">Additional Quests</h3>
@@ -302,4 +331,4 @@ const SkillTree: React.FC = () => {
   );
 };
 
-export default SkillTree;
+export default MainGame;
