@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useRef, useCallback } from 'react';
 import { skillNodes, achievements, type SkillNode, type Achievement } from '../data/skillTree';
+import { EpicTitle } from './EpicTitle';
 
 interface MainGameProps {
   onExit?: () => void;
@@ -158,9 +159,9 @@ const MainGame: React.FC<MainGameProps> = ({ onExit }) => {
 
   return (
     <div className="game-layout">
-      {/* ЗАГОЛОВОК СВЕРХУ */}
+      {/* ЗАГОЛОВОК СВЕРХУ - ВЕКТОРНЫЙ */}
       <div className="tree-header">
-        <h1 className="tree-title">Древо Прокачки Аналитика</h1>
+        <EpicTitle />
       </div>
 
       {/* ОСНОВНОЙ КОНТЕНТ */}
