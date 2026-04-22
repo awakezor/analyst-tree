@@ -287,3 +287,139 @@ h1, h2, h3, .cinzel { font-family: 'Cinzel', serif; }
   border-top: 1px solid var(--border-color);
   padding-top: 16px;
 }
+/* --- АВАТАР С ТИТУЛОМ --- */
+.avatar-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.avatar-icon {
+  font-size: 64px;
+  filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.4));
+  transition: all 0.3s ease;
+}
+
+.avatar-title {
+  font-family: 'Cinzel', serif;
+  font-size: 1.2rem;
+  color: var(--gold);
+  font-weight: bold;
+  text-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
+}
+
+.avatar-achievements {
+  display: flex;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.achievement-badge {
+  font-size: 18px;
+  filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.6));
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+/* --- БЛОК ДОСТИЖЕНИЙ --- */
+.achievements-section {
+  background: rgba(212, 175, 55, 0.05);
+  border: 1px solid var(--gold-dim);
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 16px;
+}
+
+.achievements-title {
+  font-family: 'Cinzel', serif;
+  font-size: 1rem;
+  color: var(--gold);
+  margin: 0 0 4px 0;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+.quests-hint {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  text-align: center;
+  margin: 0 0 12px 0;
+  font-style: italic;
+}
+
+.achievements-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.achievement-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.achievement-item:hover {
+  background: rgba(212, 175, 55, 0.1);
+  border-color: var(--gold-dim);
+}
+
+.achievement-item.unlocked {
+  border-color: var(--gold);
+  background: rgba(212, 175, 55, 0.08);
+}
+
+.achievement-item.locked {
+  opacity: 0.5;
+  filter: grayscale(0.8);
+}
+
+.achievement-icon {
+  font-size: 28px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 50%;
+  border: 2px solid var(--border-color);
+}
+
+.achievement-item.unlocked .achievement-icon {
+  border-color: var(--gold);
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+}
+
+.achievement-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.achievement-name {
+  font-size: 0.85rem;
+  color: var(--text-main);
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.achievement-reward {
+  font-size: 0.75rem;
+  color: var(--gold);
+  margin-top: 2px;
+  font-weight: bold;
+}
