@@ -1,8 +1,10 @@
 import React, { useState, useMemo, useRef, useCallback } from 'react';
-import { skillNodes, type SkillNode } from '../data/skillTree';
+import { skillNodes, achievements, type SkillNode, type Achievement } from '../data/skillTree';
 
 const SkillTree: React.FC = () => {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set(['root']));
+  // Состояние для дополнительных квестов (достижений)
+  const [completedQuests, setCompletedQuests] = useState<Set<string>>(new Set());
   
   // Zoom & Pan state
   const [scale, setScale] = useState(1);
@@ -97,6 +99,43 @@ const SkillTree: React.FC = () => {
   const totalSkills = skillNodes.length - 1;
   const learnedSkills = selectedIds.size - 1;
   const progressPercent = Math.round((learnedSkills / totalSkills) * 100);
+  
+  // Расчет уровня и титула
+  const level = Math.floor(learnedSkills / 3) + 1;
+  const maxLevel = Math.ceil(totalSkills / 3);
+  const levelRatio = learnedSkills / totalSkills;
+  
+  let title = 'Junior';
+  let avatar = '🧙‍♂️';
+  if (levelRatio >= 0.75) {
+    title = 'Senior';
+    avatar = '👑';
+  } else if (levelRatio >= 0.5) {
+    title = 'Middle+';
+    avatar = '🧚‍♂️';
+  } else if (levelRatio >= 0.25) {
+    title = 'Middle';
+    avatar = '🧙‍♀️';
+  }
+
+  // Проверка выполненных квестов (достижений)
+  const unlockedAchievements: Achievement[] = [];
+  achievements.forEach(achievement => {
+    if (completedQuests.has(achievement.id)) {
+      unlockedAchievements.push(achievement);
+    }
+  });
+
+  // Обработчик клика по квесту
+  const handleQuestClick = (questId: string) => {
+    const newCompleted = new Set(completedQuests);
+    if (newCompleted.has(questId)) {
+      newCompleted.delete(questId);
+    } else {
+      newCompleted.add(questId);
+    }
+    setCompletedQuests(newCompleted);
+  };
 
   return (
     <div className="game-layout">
@@ -182,13 +221,25 @@ const SkillTree: React.FC = () => {
         <div className="stats-sidebar">
           <div className="sidebar-header">
             <h2>Character Stats</h2>
-            <div className="avatar-placeholder">🧙‍♂️</div>
+            <div className="avatar-display">
+              <div className="avatar-icon">{avatar}</div>
+              <div className="avatar-title">{title}</div>
+              {unlockedAchievements.length > 0 && (
+                <div className="avatar-achievements">
+                  {unlockedAchievements.map(a => (
+                    <span key={a.id} className="achievement-badge" title={a.rewardTitle}>
+                      {a.icon}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
           <div className="stat-block">
             <div className="stat-row">
               <span>Level</span>
-              <span className="stat-value">{Math.floor(learnedSkills / 3) + 1}</span>
+              <span className="stat-value">{level} / {maxLevel}</span>
             </div>
             <div className="stat-row">
               <span>Skills Learned</span>
@@ -206,6 +257,32 @@ const SkillTree: React.FC = () => {
                 className="progress-bar-fill" 
                 style={{ width: `${progressPercent}%` }}
               />
+            </div>
+          </div>
+
+          {/* Блок дополнительных квестов */}
+          <div className="achievements-section">
+            <h3 className="achievements-title">Additional Quests</h3>
+            <p className="quests-hint">Кликните по иконке, чтобы отметить квест как выполненный</p>
+            <div className="achievements-grid">
+              {achievements.map(achievement => {
+                const isCompleted = completedQuests.has(achievement.id);
+                return (
+                  <div 
+                    key={achievement.id} 
+                    className={`achievement-item ${isCompleted ? 'unlocked' : 'locked'}`}
+                    onClick={() => handleQuestClick(achievement.id)}
+                    style={{ cursor: 'pointer' }}
+                    title={achievement.description}
+                  >
+                    <div className="achievement-icon">{achievement.icon}</div>
+                    <div className="achievement-info">
+                      <div className="achievement-name">{achievement.title}</div>
+                      {isCompleted && <div className="achievement-reward">+{achievement.rewardTitle}</div>}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
